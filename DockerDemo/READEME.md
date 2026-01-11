@@ -18,7 +18,7 @@ The goal of this POC is to:
 
 ---
 
-## Steps
+## Docker Steps
 
 1. **Create a simple Spring Boot project**
     - Add a basic REST endpoint (for example, `/hello`) to verify the application is running.
@@ -70,9 +70,61 @@ The goal of this POC is to:
 
 ---
 
-### Notes
+### Notes (Docker)
 - Docker image names and versions are independent of the Spring Boot project name.
 - Docker images are immutable; any code or configuration change requires building a new image version.
 - The Java version used to compile the application must be compatible with the Java version used in the Docker image.
 
 
+## Kubernetes Steps
+
+1. Enable Kubernetes in Docker Desktop settings.
+   - Open Docker Desktop → Settings → Kubernetes
+   - Enable Kubernetes and wait until it shows **Kubernetes is running**.
+
+2. Create a `pod.yaml` file.
+   - This file contains Pod details such as:
+      - Docker image name
+      - Container port
+      - Labels (used by Service to find the Pod)
+
+3. Create a `service.yaml` file.
+   - This file contains Service details such as:
+      - Target port of the Pod
+      - NodePort to access the application from browser
+
+4. Run the following commands to create Pod and Service:
+   ```bash
+   kubectl apply -f pod.yaml
+   kubectl apply -f service.yaml
+
+   - First command starts the Pod
+   - Second command creates the Service for the Pod
+
+5. Access the application in browser:
+   http://localhost:30007/hello
+   - 30007 is the NodePort defined in service.yaml
+   - /hello is the Spring Boot endpoint
+
+
+### Notes (Kubernetes)
+1. Request flow in Kubernetes: 
+   - Browser → Service → Pod → Container → App
+
+   
+      - Spring Boot App
+            ↓
+      - Docker Image (dockerdemo:v2)
+            ↓
+      - Kubernetes Pod
+            ↓
+      - Kubernetes Service (NodePort)
+            ↓
+      - Browser (localhost)
+
+2. Useful kubectl commands:
+    ```bash
+   kubectl get pods
+   kubectl get services
+   kubectl delete pod dockerdemo-pod
+   kubectl delete service dockerdemo-service
