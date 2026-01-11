@@ -14,7 +14,7 @@ public class Test {
         hashMap.put(4, "Arnav");
         hashMap.put(6, "Amit");
         Map.Entry entrySet  = (Map.Entry) hashMap.entrySet();
-        entrySet.getValue()
+//        entrySet.getValue();
 
     }
 }
